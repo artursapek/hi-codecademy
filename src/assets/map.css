@@ -4,21 +4,40 @@ body {
   height: 100%;
 }
 
-
 #map-container {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: #EBEBEB;
+  background-color: #EBEBEB;
+}
+
+#map-container.zoom-normal div.map-tile {
+  width: 200px;
+  height: 200px;
 }
 
 #map-canvas {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 1;
+}
+
+div.map-tile {
+  position: absolute;
+  z-index: 2;
+  background-color: #F6F6F6;
+}
+
+#map-controls {
+  z-index: 10;
 }
 
 #controls-zoom {
   position: absolute;
   top: 100px;
   left: 24px;
+  z-index: 10;
 }
 
 #controls-marker {
@@ -26,6 +45,7 @@ body {
   top: 100px;
   left: 60px;
   width: 55px;
+  z-index: 10;
 }
 
 button {
