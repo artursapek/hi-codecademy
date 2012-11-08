@@ -12,6 +12,14 @@
         left: (200 * x) + 'px',
         bottom: (200 * y) + 'px',
       });
+      var img = new Image(), $img = $(img), src = '/assets/img/tiles/' + x + '.' + y + '.png';
+      img.onerror = function(){
+        $this.css({ 'background-image': 'none' }).fadeIn(500);
+      };
+      img.onload = function(){
+        $this.css({ 'background-image': 'url(' + src + ')' }).fadeIn(500);
+      };
+      img.src = src;
     });
 
 

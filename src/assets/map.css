@@ -27,6 +27,7 @@ div.map-tile {
   position: absolute;
   z-index: 2;
   background-color: #F6F6F6;
+  display: none;
 }
 
 #map-controls {
