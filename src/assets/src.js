@@ -100,11 +100,10 @@
       $desiredRes.hide().appendTo($tile).fadeIn(250);
 
       setTimeout(function(){
-        $tile.find('img').not('[src="' + url + '"]').hide();
+        $tile.find('img').not('[src="' + url + '"]').fadeOut(250);
       }, 250);
 
     } else {
-
       $.get('/tile/' + x + '.' + y + '.' + zoomLevel, {}, function(response){
         // Commit that we've loaded this tile so we don't load it again.
         tilesLoaded.push(x + '.' + y);
@@ -120,10 +119,10 @@
           img.onload = function(){
 
             $tile.append(img).fadeIn(250);
+            $(img).fadeIn(250).attr('zlevel', zoomLevel);
 
-            $(img).fadeIn(250);
             setTimeout(function(){
-              $imgs.hide();
+              $tile.find('img').not($('[zlevel="' + zoomLevel + '"]')).fadeOut(250);
             }, 250);
           };
           img.src = url;
@@ -219,6 +218,14 @@
 
       $mapcanvas.css({ '-webkit-transform': 'scale(0.5)' });
       zoomLevel --;
+
+      $zoominButton.attr('class', 'sprite');
+
+      if (zoomLevel == 1){
+        $zoomoutButton.attr('class', 'disabled');
+      } else {
+        $zoomoutButton.attr('class', 'sprite');
+      }
       setTimeout(function(){
         changeZoom(zoomLevel);
       }, 10);
@@ -227,6 +234,14 @@
       if (zoomLevel == 3) return;
       $mapcanvas.css({ '-webkit-transform': 'scale(2.0)' });
       zoomLevel ++;
+
+      $zoomoutButton.attr('class', 'sprite');
+
+      if (zoomLevel == 3){
+        $zoominButton.attr('class', 'disabled');
+      } else {
+        $zoominButton.attr('class', 'sprite');
+      }
       setTimeout(function(){
         changeZoom(zoomLevel);
       }, 10);
