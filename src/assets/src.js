@@ -80,17 +80,18 @@
     });
   };
 
-  var makeTile = function(x, y){
-    x = Math.ceil(x);
-    y = Math.ceil(y);
-    if (tilesLoaded.indexOf(x + '.' + y) > -1) return;      
-    var $tile = $('<div class="map-tile" data-x="' + x + '" data-y="' + y + '"></div>');
+  var getX = function($tile){
+    return parseInt($tile.attr('data-x'), 10);
+  }
 
-    // Make tile appropriate size
-    setTile($tile);
+  var getY = function($tile){
+    return parseInt($tile.attr('data-y'), 10);
+  }
 
-    // Here, check if the tile has an image available.
-    $.get('/tile/' + x + '.' + y, {}, function(url){
+  var updateTileImage = function($tile){
+    var x = getX($tile), y = getY($tile);
+
+    $.get('/tile/' + x + '.' + y + '.' + zoomLevel, {}, function(url){
       // Commit that we've loaded this tile so we don't load it again.
       tilesLoaded.push(x + '.' + y);
       // If no file exists
@@ -100,31 +101,46 @@
       } else {
         // If it does, load it and apply it as a background-image.
         url = '/assets/img/tiles/' + url;
-        var img = new Image();
+        var img = new Image(), $currentimg = $tile.find('img');
         img.onload = function(){
           $tile.append(img).fadeIn(250);
+          $(img).fadeIn(250);
+          if ($currentimg.length){
+            setTimeout(function(){
+              $currentimg.remove();
+            }, 250);
+          }
         };
         img.src = url;
       }
     });
+  }
+
+  var makeTile = function(x, y){
+    x = Math.ceil(x); y = Math.ceil(y);
+    if (tilesLoaded.indexOf(x + '.' + y) > -1) return;      
+
+    // Make DOM element for tile
+    var $tile = $('<div class="map-tile" data-x="' + x + '" data-y="' + y + '"></div>');
+
+    // Make tile appropriate size
+    setTile($tile);
+
     $mapcanvas.append($tile);
   };
 
-  var setTile = function($tile, anim){
-    var x = parseInt($tile.attr('data-x'), 10),
-        y = parseInt($tile.attr('data-y'), 10),
-        speed = anim == true ? 200 : 0,
-        size = [100, 200, 400][zoomLevel - 1];
+  var setTile = function($tile){
+    var size = [100, 200, 400][zoomLevel - 1],
+        x = getX($tile), y = getY($tile);
 
-    x = parseInt(x, 10);
-    y = parseInt(y, 10);
+    updateTileImage($tile);
 
-    $tile.animate({
+    $tile.css({
       width: size,
       height: size,
       left: (size * x) + 'px',
       bottom: (size * y) - size + 'px'
-    }, speed, 'easeOutQuad');
+    });
   };
 
   var loadVisibleTiles = function(){
@@ -143,14 +159,13 @@
 
   var changeZoom = z = function(level){
     zoomLevel = level;
+    $mapcanvas.css({ '-webkit-transform': '' });
     $('.map-tile').each(function(){
       setTile($(this), false);
     });
     // Now that the viewport has changed, load any new tiles we need.
     loadVisibleTiles();
-    $mapcanvas.css({ '-webkit-transform': '' });
   }
-  
 
   $(document).ready(function(){
     
@@ -164,8 +179,10 @@
 
     // Center the canvas on last location/default location
     $mapcanvas.css({
-      left: (window.innerWidth / 2) + (lat * 200) + 'px',
-      top: (window.innerHeight / 2) + (lng * 200) + 'px'
+      // parseInt to make sure they are not floating point
+      // (which will later cause tiny hairlines to show up between tiles)
+      left: parseInt((window.innerWidth / 2) + (lat * 200), 10) + 'px',
+      top: parseInt((window.innerHeight / 2) + (lng * 200), 10) + 'px'
     });
 
     // Initialize dat map
