@@ -89,31 +89,47 @@
   }
 
   var updateTileImage = function($tile){
-    var x = getX($tile), y = getY($tile);
+    var x = getX($tile), y = getY($tile),
+        url = '/assets/img/tiles/' + x + '.' + y + '.' + zoomLevel + '.png';
+        $desiredRes = $tile.find('img[src="' + url + '"]'),
+        $imgs = $tile.find('img');
 
-    $.get('/tile/' + x + '.' + y + '.' + zoomLevel, {}, function(url){
-      // Commit that we've loaded this tile so we don't load it again.
-      tilesLoaded.push(x + '.' + y);
-      // If no file exists
-      if (url == ''){
-        // Don't use a background image
-        $tile.fadeIn(250);
-      } else {
-        // If it does, load it and apply it as a background-image.
-        url = '/assets/img/tiles/' + url;
-        var img = new Image(), $currentimg = $tile.find('img');
-        img.onload = function(){
-          $tile.append(img).fadeIn(250);
-          $(img).fadeIn(250);
-          if ($currentimg.length){
+    if ($desiredRes.length){
+      // Picture has already been loaded, so put it on top and fade it in
+      $desiredRes.appendTo($tile).fadeIn(250);
+
+      setTimeout(function(){
+        $tile.find('img').not('[src="' + url + '"]').hide();
+      }, 250);
+
+    } else {
+
+      $.get('/tile/' + x + '.' + y + '.' + zoomLevel, {}, function(response){
+        // Commit that we've loaded this tile so we don't load it again.
+        tilesLoaded.push(x + '.' + y);
+        // If no file exists
+        if (response == ''){
+          // Don't use a background image
+          $tile.fadeIn(250);
+        } else {
+          // If it does, load it and apply it as a background-image.
+
+          var img = new Image();
+
+          img.onload = function(){
+
+            $tile.append(img).fadeIn(250);
+
+            $(img).fadeIn(250);
             setTimeout(function(){
-              $currentimg.remove();
+              $imgs.hide();
             }, 250);
-          }
-        };
-        img.src = url;
-      }
-    });
+          };
+          img.src = url;
+
+        }
+      });
+    }
   }
 
   var makeTile = function(x, y){
