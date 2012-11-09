@@ -9,6 +9,7 @@ body {
   height: 100%;
   overflow: hidden;
   background-color: #EBEBEB;
+  position: relative;
 }
 
 #map-container.zoom-normal div.map-tile {
@@ -26,7 +27,8 @@ body {
 div.map-tile {
   position: absolute;
   z-index: 2;
-  background-color: #F6F6F6;
+  background-color: #f7f6f6;
+  background-position: 0, 0;
   display: none;
 }
 
