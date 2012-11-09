@@ -97,7 +97,7 @@
 
     if ($desiredRes.length){
       // Picture has already been loaded, so put it on top and fade it in
-      $desiredRes.hide().appendTo($tile).fadeIn(250);
+      $desiredRes.appendTo($tile).fadeIn(250);
 
       setTimeout(function(){
         $tile.find('img').not('[src="' + url + '"]').fadeOut(250);
@@ -122,7 +122,7 @@
             $(img).fadeIn(250).attr('zlevel', zoomLevel);
 
             setTimeout(function(){
-              $tile.find('img').not($('[zlevel="' + zoomLevel + '"]')).fadeOut(250);
+              $tile.find('img').not('[src="' + url + '"]').fadeOut(250);
             }, 250);
           };
           img.src = url;
