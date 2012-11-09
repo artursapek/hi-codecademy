@@ -14,3 +14,11 @@ def tileimg(request, coords):
     return HttpResponse('%s.png' % coords)
   else:
     return HttpResponse('')
+
+def addmarker(request):
+  post = request.POST
+  x = post.get('x')
+  y = post.get('y')
+  title = post.get('title')
+  marker = Marker(title, x, y)
+  marker.save()

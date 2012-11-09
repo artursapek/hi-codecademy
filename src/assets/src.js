@@ -64,8 +64,8 @@
       if (justmoved){
         inertiaInterval = setInterval(function(){
           
-          changeX = changeX * 0.95;
-          changeY = changeY * 0.95;
+          changeX = parseInt(changeX * 0.95, 10);
+          changeY = parseInt(changeY * 0.95, 10);
 
           move();
 
@@ -96,7 +96,7 @@
 
     if ($desiredRes.length){
       // Picture has already been loaded, so put it on top and fade it in
-      $desiredRes.appendTo($tile).fadeIn(250);
+      $desiredRes.hide().appendTo($tile).fadeIn(250);
 
       setTimeout(function(){
         $tile.find('img').not('[src="' + url + '"]').hide();
@@ -197,8 +197,8 @@
     $mapcanvas.css({
       // parseInt to make sure they are not floating point
       // (which will later cause tiny hairlines to show up between tiles)
-      left: parseInt((window.innerWidth / 2) + (lat * 200), 10) + 'px',
-      top: parseInt((window.innerHeight / 2) + (lng * 200), 10) + 'px'
+      left: parseInt((window.innerWidth / 2) , 10) + 'px',
+      top: parseInt((window.innerHeight / 2), 10) + 'px'
     });
 
     // Initialize dat map
@@ -214,7 +214,7 @@
       zoomLevel --;
       setTimeout(function(){
         changeZoom(zoomLevel);
-      }, 1);
+      }, 10);
     });
     $zoominButton.click(function(){
       if (zoomLevel == 3) return;
@@ -222,7 +222,7 @@
       zoomLevel ++;
       setTimeout(function(){
         changeZoom(zoomLevel);
-      }, 1);
+      }, 10);
     });
   });
 }());
