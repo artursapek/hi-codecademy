@@ -32,7 +32,7 @@
 
     };
       
-    $this.on('mousedown.draghandler', function(e){
+    $('body').on('mousedown.draghandler', function(e){
       mdown = true;
       changeX = changeY = 0;
       // Prevent images from being dragged indiviually
@@ -80,6 +80,7 @@
     });
   };
 
+
   var getX = function($tile){
     return parseInt($tile.attr('data-x'), 10);
   }
@@ -110,7 +111,7 @@
         // If no file exists
         if (response == ''){
           // Don't use a background image
-          $tile.fadeIn(250);
+          $tile.remove();
         } else {
           // If it does, load it and apply it as a background-image.
 
@@ -189,6 +190,12 @@
     $mapcanvas = $('#map-canvas');
     $zoominButton = $('button#zoom-in');
     $zoomoutButton = $('button#zoom-out');
+
+    $('button').mousedown(function(e){
+      e.stopPropagation();
+    }).mousemove(function(e){
+      e.stopPropagation();
+    });
 
     // Drag and drop 
     var mdown = false;

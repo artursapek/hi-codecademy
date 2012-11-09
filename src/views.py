@@ -17,8 +17,9 @@ def tileimg(request, coords):
 
 def addmarker(request):
   post = request.POST
-  x = post.get('x')
-  y = post.get('y')
+  lat = post.get('lat')
+  lng = post.get('lng')
   title = post.get('title')
-  marker = Marker(title, x, y)
+  marker = Marker(title, lat, lng)
   marker.save()
+  return JSON(marker.jsonify())
