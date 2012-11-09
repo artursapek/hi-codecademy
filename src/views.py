@@ -1,4 +1,4 @@
-from django.http import HttpResponse, HttpResponseRedirect as redirect
+from django.http import HttpResponse
 from django.shortcuts import render_to_response as render
 from django.conf import settings
 from django.views.static import serve
