@@ -10,6 +10,7 @@ body {
   overflow: hidden;
   position: relative;
   background-color: #f1f1f1;
+  cursor: all-scroll;
 }
 
 #map-container.zoom-normal div.map-tile {
