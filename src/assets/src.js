@@ -8,26 +8,35 @@
  */
 
 (function(){
-  // Load the map at the origin (0, 0) by default
+  /* Load the map at the origin (0, 0) by default */
   var lat = 0, lng = 0,
-      // Check for localStored coords last browsed to
+      /* Check for localStored coords last browsed to */
       storedLat = localStorage.getItem('artur-maps-lat'),
       storedLng  = localStorage.getItem('artur-maps-lng'),
 
-      // Zoom level: 1, 2, or 3 smallest to largest
-      // Always start at 1 by default.
+      /*
+        Zoom level: 1, 2, or 3 smallest to largest
+        Always start at 1 by default.
+      */
       zoomLevel = 1;
   
       console.log(storedLat, storedLng);
-  // Apply stored coords if they've been stored
+  /* Apply stored coords if they've been stored */
   storedLat && (lat = parseFloat(storedLat));
   storedLng && (lng = parseFloat(storedLng));
 
-
+  /* Some jQuery objects we're creating on doc ready, but want to be able to reference in these helpers */
   var $mapcanvas, $zoominButton, $zoomoutButton, tilesLoaded = [];
-  t = tilesLoaded;
 
 
+
+
+  /* Helper functions: */
+
+  /*
+    Gets bound to $mapcanvas on doc ready
+    Adds all dragging/inertia functionality
+  */
   var handleDrag = function($this){
     var mdown = false, lastX = null, lastY = null, justmoved = false,
         changeX = 0, changeY = 0, inertiaInterval,
@@ -55,15 +64,12 @@
         lastY = e.clientY;
         return;
       } else {
-
+        /* Update the amts. to move and save current position for comparison on next event firing */
         changeX = lastX - e.clientX,
         changeY = lastY - e.clientY;
-
         move();
-
         lastX = e.clientX;
         lastY = e.clientY;
-
         justmoved = true;
         setTimeout(function(){
           justmoved = false;
@@ -142,7 +148,6 @@
 
           /* Load it! */
           img.src = url;
-
         }
       });
     }
@@ -151,21 +156,21 @@
   function makeTile(x, y){
     x = Math.ceil(x); y = Math.ceil(y);
     if (tilesLoaded.indexOf(x + '.' + y) > -1) return;      
-
-    // Make DOM element for tile
+    /* Make DOM element for tile */
     var $tile = $('<div class="map-tile" data-x="' + x + '" data-y="' + y + '"></div>');
-
-    // Make tile appropriate size
+    /* Pass the tile in to get set up with its position and image */
     setTile($tile);
-
   };
 
+  /* 
+    Put a tile in its correct position
+    Input a $(tile)
+    No output
+  */
   function setTile($tile){
     var size = [100, 200, 400][zoomLevel - 1],
         x = getCoord($tile, 'x'), y = getCoord($tile, 'y');
-
     updateTileImage($tile);
-
     $tile.css({
       width: size,
       height: size,
@@ -174,6 +179,10 @@
     });
   };
 
+  /* 
+    Load any new tiles which may have come into the viewport
+    No input/output
+  */
   function loadVisibleTiles(){
     var scale = [200, 400, 800][zoomLevel - 1], spreadX = Math.ceil(window.innerWidth / scale) + 2, spreadY = Math.ceil(window.innerHeight / scale) + 2;
     for (var x = 0; x <= spreadX; ++ x){
@@ -190,6 +199,11 @@
     localStorage.setItem('artur-maps-lng', lng);
   };
 
+
+  /*
+    Reposition map markers to reflect current zoom level
+    No input/output
+  */
   function setMarkers(){
     var size = [100, 200, 400][zoomLevel - 1];
     $('div.marker').each(function(){
@@ -201,7 +215,11 @@
     });
   };
 
-  function changeZoom(){
+  /*
+    Update markers and tiles to reflect current zoomLevel
+    No input/output
+  */
+  function updateZoom(){
     setMarkers();
     $mapcanvas.css({ '-webkit-transform': '' });
     $('.map-tile').each(function(){
@@ -210,10 +228,6 @@
     // Now that the viewport has changed, load any new tiles we need.
     loadVisibleTiles();
   }
-
-  function parseCSS(){
-
-  };
 
   $(document).ready(function(){
     
@@ -249,8 +263,6 @@
       
       $mapcanvas.css({
         '-webkit-transform': zoomin ? 'scale(2)' : 'scale(0.5)',
-        left: parseCSS($mapcanvas, 'left', function(x){ return (zoomin ? x / 2 : x * 2); }),
-        top: parseCSS($mapcanvas, 'top', function(x){ return (zoomin ? x / 2 : x * 2); }),
       });
 
       zoomLevel += (zoomin ? 1 : -1);
@@ -264,7 +276,7 @@
         $zoomoutButton.attr('class', (zoomLevel == 1) ? 'disabled' : 'sprite');
       }
 
-      setTimeout(changeZoom, 10);
+      setTimeout(updateZoom, 10);
     });
 
     /* Initialize dat map */
