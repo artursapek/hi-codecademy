@@ -19,7 +19,15 @@
         <button class="large-sprite" id="make-marker"></button>
       </div>
     </div>
-    <div id="map-canvas"></div>
+    <div id="map-canvas">
+      <div id="markers">
+        {% for marker in markers %}
+          <div class="marker" data-lat="{{ marker.lat }}" data-lng="{{ marker.lng }}" >
+            <div class="marker-graphic"></div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
     </div>
   </div>
 </body>

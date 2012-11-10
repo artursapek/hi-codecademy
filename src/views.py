@@ -4,9 +4,10 @@ from django.conf import settings
 from django.views.static import serve
 from utils import JSON
 import os
+from src.models import *
 
 def index(request):
-  return render('index.html')
+  return render('index.html', { 'markers': Marker.objects.all()})
 
 def tileimg(request, coords):
   print settings.ABS

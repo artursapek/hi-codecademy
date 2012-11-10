@@ -38,6 +38,20 @@ div.map-tile {
 	user-select: none;	
 }
 
+div.marker {
+  position: absolute;
+  z-index: 4;
+}
+
+div.marker div.marker-graphic {
+  position: absolute;
+  left: -22px;
+  bottom: 0px;
+  width: 44px;
+  height: 52px;
+  background: url('/assets/img/marker.png');
+}
+
 div.map-tile img {
   width: 100%;
   height: 100%;
@@ -45,6 +59,7 @@ div.map-tile img {
   top: 0px;
   left: 0px;
   display: none;
+  z-index: 3;
 }
 
 #map-controls {

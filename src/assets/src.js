@@ -6,7 +6,7 @@
       storedLng  = localStorage.getItem('saved-lng'),
 
       // Zoom level: 1, 2, or 3 smallest to largest
-      zoomLevel = 2;
+      zoomLevel = 1;
   
   // Apply stored coords if they've been stored
   storedLat && (lat = storedLat);
@@ -142,7 +142,7 @@
     // Make tile appropriate size
     setTile($tile);
 
-    $mapcanvas.append($tile);
+    $mapcanvas.prepend($tile);
   };
 
   var setTile = function($tile){
@@ -173,8 +173,21 @@
     };
   };
 
+  var setMarkers = function(){
+    var size = [100, 200, 400][zoomLevel - 1];
+    $('div.marker').each(function(){
+      var $this = $(this);
+      $this.css({
+        left: parseFloat($this.attr('data-lng')) * size + 'px',
+        bottom: parseFloat($this.attr('data-lat')) * size + 'px',
+      })
+    });
+  };
+
   var changeZoom = z = function(level){
     zoomLevel = level;
+    setMarkers();
+    
     $mapcanvas.css({ '-webkit-transform': '' });
     $('.map-tile').each(function(){
       setTile($(this), false);
@@ -195,6 +208,8 @@
     }).mousemove(function(e){
       e.stopPropagation();
     });
+
+    setMarkers();
 
     // Drag and drop 
     var mdown = false;
