@@ -1,5 +1,6 @@
 from PIL import Image
 import math
+import os
 
 '''
   split_image
@@ -26,6 +27,19 @@ import math
        (zoomlevel: int) 1, 2, or 3
   O/P: nothing
 '''
+
+
+''' 
+  empty
+  Given img.load() on a PIL Image, returns bool telling if it's 100% transparent pixels.
+'''
+def empty(img, ts):
+  for x in xrange(ts):
+    for y in xrange(ts):
+      ''' As soon as we find a non-transparent pixel, say so and stop '''
+      if img.getpixel((x, y))[3] != 0:
+        return False
+  return True
 
 def split_image(tilesize, zoomlevel):
 
@@ -60,11 +74,20 @@ def split_image(tilesize, zoomlevel):
         addX + tilesize,
         height - addY + tilesize)
 
-      print cropDimens
 
       ''' Crop and save it '''
       cropped = image.crop(cropDimens)
-      cropped.save('assets/img/tiles/%s.%s.%s.png' % (x, y, zoomlevel))
+      cropped.convert('RGBA')
+      
+      ''' If it's empty, don't even save it '''
+      if empty(cropped, tilesize):
+        print 'Omitting empty tile %s' % (x, y)
+        continue
+
+      ''' Otherwise, save and continue '''
+      path = 'assets/img/tiles/%s.%s.%s.png' % (x, y, zoomlevel)
+      print 'Saved %s' % path
+      cropped.save(path)
 
 ''' Split the image on the sizes we decided on! '''
 
