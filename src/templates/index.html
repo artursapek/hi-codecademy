@@ -5,6 +5,9 @@
   <title>Artur maps</title>
   <script src="/assets/jquery-1.7.1.min.js" type="text/javascript" charset="utf-8"></script>
   <script src="/assets/src.js" type="text/javascript" charset="utf-8"></script>
+  <script type="text/javascript" charset="utf-8">
+    window.csrftoken =  '{{ csrf_token }}';
+  </script>
   <link rel="stylesheet" href="/assets/map.css" type="text/css" media="screen" charset="utf-8">
 </head>
 <body>
@@ -22,8 +25,9 @@
     <div id="map-canvas">
       <div id="markers">
         {% for marker in markers %}
-          <div class="marker" data-lat="{{ marker.lat }}" data-lng="{{ marker.lng }}" >
+          <div class="marker" lat="{{ marker.lat }}" lng="{{ marker.lng }}" >
             <div class="marker-graphic"></div>
+            <div class="marker-shadow"></div>
           </div>
         {% endfor %}
       </div>

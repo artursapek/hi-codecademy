@@ -9,13 +9,8 @@ body {
   height: 100%;
   overflow: hidden;
   position: relative;
-  background-color: #f1f1f1;
+  background-color: #f1f9e8;
   cursor: all-scroll;
-}
-
-#map-container.zoom-normal div.map-tile {
-  width: 200px;
-  height: 200px;
 }
 
 #map-canvas {
@@ -38,9 +33,23 @@ div.map-tile {
 	user-select: none;	
 }
 
+div.map-tile.small {
+  width: 100px;
+  height: 100px;
+}
+
+div.map-tile.medium {
+  width: 200px;
+  height: 200px;
+}
+
+div.map-tile.large {
+  width: 400px;
+  height: 400px;
+}
+
 div.marker {
   position: absolute;
-  z-index: 4;
 }
 
 div.marker div.marker-graphic {
@@ -50,6 +59,17 @@ div.marker div.marker-graphic {
   width: 44px;
   height: 52px;
   background: url('/assets/img/marker.png');
+  z-index: 4;
+}
+
+div.marker div.marker-shadow {
+  width: 60px;
+  height: 28px;
+  content: url('/assets/img/marker.shadow.png');
+  position: relative;
+  top: 26px;
+  right: 46px;
+  z-index: 3;
 }
 
 div.map-tile img {

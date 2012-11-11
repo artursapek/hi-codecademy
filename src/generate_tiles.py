@@ -81,7 +81,7 @@ def split_image(tilesize, zoomlevel):
       
       ''' If it's empty, don't even save it '''
       if empty(cropped, tilesize):
-        print 'Omitting empty tile %s' % (x, y)
+        print 'Omitting empty tile (%s, %s)' % (x, y)
         continue
 
       ''' Otherwise, save and continue '''
