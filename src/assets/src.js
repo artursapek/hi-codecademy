@@ -157,7 +157,7 @@
       /* timeout this so there's no flicker when the permanent marker gets put down */
       setTimeout(function(){
         $draggable.remove();
-      }, 3);
+      }, 10);
     });
   };
 
