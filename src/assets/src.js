@@ -154,7 +154,10 @@
           x = (offset.left - e.clientX) - 60,
           y = (offset.top - e.clientY);
       makeMarker(x / size, y / size);
-      $draggable.remove();
+      /* timeout this so there's no flicker when the permanent marker gets put down */
+      setTimeout(function(){
+        $draggable.remove();
+      }, 3);
     });
   };
 
